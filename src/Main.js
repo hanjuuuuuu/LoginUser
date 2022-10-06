@@ -1,20 +1,29 @@
+import axios from 'axios';
 import React from 'react';
 
-function Main(props) {
-    const isLogin = props.isLogin
-
-    const logout = () => {
-        sessionStorage.removeItem('user_id')
-        document.location.href = '/'
+const Main = ({logout, user}) => {
+    const onLogout = () => {
+        axios.post('/logout', null, {
+            withCredentials: true,
+        })
+        .then(() => logout())
+        .catch((error) =>{
+            console.log(error)
+        })
+        console.log(user.nickname)
     }
 
-    return(
+    return( user == null ? 
+        <div>Loading...</div> :
         <div>
             <div>
                 <h2>Main Page</h2>
             </div>
             <div>
-                <button onClick={logout}>로그아웃</button>
+                <button onClick={onLogout}>로그아웃</button>
+            </div>
+            <div>
+                안녕하세요 <span className='name'>{user.userId}</span> 님
             </div>
         </div>
         

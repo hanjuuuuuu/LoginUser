@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import Login from './Login';
 
 const App = () => {
@@ -9,21 +10,27 @@ const App = () => {
     setIsLogin(true);
   }
 
-
+  //로그아웃
   const logout = () => {
-    //sessionStorage.removeItem('user_id')
-    //document.location.href = '/'
+    setIsLogin(false);
   }
 
+  // const authHandler = () => {
+  //   return axios
+  //     .get("http://localhost:8080/logincheck")
+  //     .then((res)=>{
+  //       console.log(res.data)
+  //       setIsLogin(true)
+  //       console.log("여기?")
+  //     })
+  //     .catch((err)=> {
+  //       console.log(err.res.data)
+  //     });
+  // };
+
   // useEffect(() => {
-  //   if(sessionStorage.getItem('user_id') === null){
-  //     console.log('isLoginx:', isLogin)
-  //   } else{
-  //     setIsLogin(true)
-  //     console.log('id:', sessionStorage.getItem('user_id'))
-  //     console.log('isLogin:', isLogin)
-  //   }
-  // })
+  //   authHandler();
+  // }, []);
 
   return (
     <div>
@@ -33,7 +40,7 @@ const App = () => {
             <h2>Main Page</h2>
           </div>
           <div>
-            <button onclick={logout}>로그아웃</button>
+            <button onClick={logout}>로그아웃</button>
           </div>
         </div> : 
         <Login isLogin={isLogin} onLogin={onLogin} />}
