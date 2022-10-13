@@ -1,10 +1,10 @@
 import 'antd/dist/antd.min.css';
 import { Button, Checkbox, Form, Input } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 
 
-const Login = ({isLogin, onLogin, user}) => {
+const Login = ({isLogin, onLogin, logout}) => {
     const [form] = Form.useForm();
     const userTemplete = {
         "ID": "",
@@ -26,28 +26,43 @@ const Login = ({isLogin, onLogin, user}) => {
         .then((response)=> {
             console.log("----------------reponse--------------")
             console.log(response.data)                  //{ID: 'hanju', PW: '1234'}
-            if(response.data.nickname === undefined || response.data.nickname === null){
+            if(response.data.ID === undefined || response.data.ID === null){
                 alert('아이디 혹은 비밀번호가 틀렸습니다.')
             }
-            else if(response.data.nickname === userTemplete.ID) { 
+            else if(response.data.ID === userTemplete.ID) { 
                 if(userTemplete.remember === true){
                     console.log('로그인 유지')
-                    //response.cookie('is_logined','o', maxAge=3600000)
-                    // return axios.get('/logincheck',{
-                    //     withCredentials: true,
-                    // })
+                    return axios.get("http://localhost:8080/logincheck",{
+                        withCredentials: true,
+                    })
+                    .then((res)=>{
+                        onLogin();
+                        console.log(res);
+                    })
                 }
-                onLogin();              //로그인 성공 
+                onLogin();              //로그인 성공 (유지 안함)
             }
         })
-        // .then((response)=>{
-        //     let userId = response.data.ID
-        //     user(userId)
-        // })
         .catch((error) =>{
             console.log(error)
         })
     }
+
+    const authHandler = () =>{
+        return axios
+        .get("http://localhost:8080/logincheck")
+        .then((res)=>{
+            console.log(res.data)
+            onLogin();
+        })
+        .catch((err)=>{
+            console.log(err.res.data)
+        });
+    }
+
+    useEffect(()=>{
+        authHandler();
+    }, []);
 
 return(
     <Form 

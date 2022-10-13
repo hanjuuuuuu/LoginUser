@@ -13,6 +13,14 @@ const App = () => {
   //로그아웃
   const logout = () => {
     setIsLogin(false);
+    return axios
+    .post('http://localhost:8080/logout')
+    .then((res)=> {
+      setIsLogin(false)
+    })
+    .catch((err)=> {
+      console.log(err.response.data)
+    })
   }
 
   // const authHandler = () => {
