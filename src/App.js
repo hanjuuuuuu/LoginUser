@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Login from './Login';
+import Main from './Main';
+
 
 const App = () => {
   const [isLogin, setIsLogin] = useState(false)
@@ -13,44 +15,29 @@ const App = () => {
   //로그아웃
   const logout = () => {
     setIsLogin(false);
-    return axios
-    .post('http://localhost:8080/logout')
-    .then((res)=> {
-      setIsLogin(false)
-    })
-    .catch((err)=> {
-      console.log(err.response.data)
-    })
   }
 
-  // const authHandler = () => {
-  //   return axios
-  //     .get("http://localhost:8080/logincheck")
-  //     .then((res)=>{
-  //       console.log(res.data)
-  //       setIsLogin(true)
-  //       console.log("여기?")
-  //     })
-  //     .catch((err)=> {
-  //       console.log(err.res.data)
-  //     });
-  // };
+  const authHandler = () =>{  //초기 화면 렌더링 시, 로그인 유지 확인하여 페이지 렌더링
+    return axios
+    .get("http://localhost:8091/logincheck")
+    .then((res)=>{
+        console.log(res.data);
+        onLogin();
+    })
+    .catch((err) => {
+        console.log(err.res.data);
+    });
+}
 
-  // useEffect(() => {
-  //   authHandler();
-  // }, []);
+useEffect(()=>{
+    authHandler();
+});
+
 
   return (
     <div>
       {isLogin ?
-        <div>
-          <div>
-            <h2>Main Page</h2>
-          </div>
-          <div>
-            <button onClick={logout}>로그아웃</button>
-          </div>
-        </div> : 
+        <Main isLogin={isLogin} logout={logout}/> : 
         <Login isLogin={isLogin} onLogin={onLogin} />}
     </div>
   )

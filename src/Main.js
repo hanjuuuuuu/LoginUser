@@ -1,33 +1,30 @@
-import axios from 'axios';
 import React from 'react';
+import axios from 'axios';
 
-const Main = ({logout, user}) => {
-    const onLogout = () => {
-        axios.post('/logout', null, {
-            withCredentials: true,
+
+const Main = ({isLogin, logout}) => {
+
+    const onClick = () => {
+        return axios
+        .post('http://localhost:8091/logout')
+        .then((res)=> {
+            logout();
         })
-        .then(() => logout())
-        .catch((error) =>{
-            console.log(error)
+        .catch((err)=> {
+            console.log(err.response.data)
         })
-        console.log(user.nickname)
     }
 
-    return( user == null ? 
-        <div>Loading...</div> :
+return(
+    <div>
         <div>
-            <div>
-                <h2>Main Page</h2>
-            </div>
-            <div>
-                <button onClick={onLogout}>로그아웃</button>
-            </div>
-            <div>
-                안녕하세요 <span className='name'>{user.userId}</span> 님
-            </div>
+            <h2>Main Page</h2>
         </div>
-        
-    )
+        <div>
+            <button onClick={onClick} >로그아웃</button>
+        </div>
+    </div>
+)
 }
 
 export default Main;

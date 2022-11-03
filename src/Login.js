@@ -2,6 +2,7 @@ import 'antd/dist/antd.min.css';
 import { Button, Checkbox, Form, Input } from 'antd';
 import React, { useEffect } from 'react';
 import axios from 'axios';
+import { KAKAO_AUTH_URL, NAVER_AUTH_URL } from './OAuth';
 
 
 const Login = ({isLogin, onLogin, logout}) => {
@@ -12,7 +13,7 @@ const Login = ({isLogin, onLogin, logout}) => {
         "remember": ""
     }
 
-    const onClick = () => {
+    const onClick = () => {     //아이디 비밀번호 확인하고 
         let userInform = form.getFieldsValue()
 
         userTemplete.ID = userInform.ID
@@ -20,7 +21,7 @@ const Login = ({isLogin, onLogin, logout}) => {
         userTemplete.remember = userInform.remember
         console.log(userTemplete)
 
-        axios.post("http://localhost:8080/login ", 
+        axios.post("http://localhost:8091/login ", 
             userTemplete
         )
         .then((response)=> {
@@ -32,7 +33,7 @@ const Login = ({isLogin, onLogin, logout}) => {
             else if(response.data.ID === userTemplete.ID) { 
                 if(userTemplete.remember === true){
                     console.log('로그인 유지')
-                    return axios.get("http://localhost:8080/logincheck",{
+                    return axios.get("http://localhost:8091/logincheck",{
                         withCredentials: true,
                     })
                     .then((res)=>{
@@ -47,22 +48,6 @@ const Login = ({isLogin, onLogin, logout}) => {
             console.log(error)
         })
     }
-
-    const authHandler = () =>{
-        return axios
-        .get("http://localhost:8080/logincheck")
-        .then((res)=>{
-            console.log(res.data)
-            onLogin();
-        })
-        .catch((err)=>{
-            console.log(err.res.data)
-        });
-    }
-
-    useEffect(()=>{
-        authHandler();
-    }, []);
 
 return(
     <Form 
@@ -131,9 +116,17 @@ return(
     <div style={{marginLeft:570, marginTop:40, width:1200}}>-------------------------------sns로 로그인-------------------------------
     </div>
 
-    <img style={{marginLeft:680, marginTop:15, width:60}} alt="google" src="img/ic_google.svg"></img> 
-    <img style={{marginLeft:15, marginTop:15, width:60}} alt="naver" src="img/ic_naver.svg"></img>
-    <img style={{marginLeft:15, marginTop:15, width:60}} alt="kakao" src="img/ic_kakao.svg"></img>
+    <img style={{marginLeft:670, marginTop:15, width:60}} alt="google" src="img/ic_google.svg"></img> 
+
+    <a href={NAVER_AUTH_URL}>
+        <img style={{marginLeft:15, marginTop:15, width:60}} alt="naver" src="img/ic_naver.svg"></img>  
+    </a>
+
+    <a href={KAKAO_AUTH_URL}>
+        <img style={{marginLeft:15, marginTop:15, width:60}} alt="kakao" src="img/ic_kakao.svg"></img>
+    </a> 
+        
+    
     </Form>
 );
 }
